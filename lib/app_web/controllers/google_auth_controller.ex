@@ -16,7 +16,7 @@ defmodule AppWeb.GoogleAuthController do
         |> put_session(:user_token, token)
         |> assign(:current_user, user)
         |> put_flash(:info, "Welcome back, #{user.name}!")
-        |> redirect(to: "/csci379-25s-h")
+        |> redirect(to: "/tvtracker")
 
       {:error, reason} ->
         conn

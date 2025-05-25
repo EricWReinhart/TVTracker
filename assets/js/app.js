@@ -71,7 +71,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.classList.toggle("dark", savedTheme === "dark");
 });
 
-let liveSocketPath = process.env.NODE_ENV === "production" ? "/csci379-25s-h/live" : "/live";
+// let liveSocketPath = process.env.NODE_ENV === "production" ? "/csci379-25s-h/live" : "/live";
+let liveSocket = new LiveSocket(liveSocketPath, Socket, {
+  params: { _csrf_token: csrfToken },
+  hooks: Hooks
+})
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
