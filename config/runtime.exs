@@ -74,6 +74,10 @@ if config_env() == :prod do
   config :app, AppWeb.OMDb,
     api_key: System.fetch_env!("OMDB_API_KEY")
 
+  config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+    client_id: System.get_env("GOOGLE_CLIENT_ID"),
+    client_secret: System.get_env("GOOGLE_CLIENT_SECRET")
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
