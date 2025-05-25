@@ -72,10 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // let liveSocketPath = process.env.NODE_ENV === "production" ? "/csci379-25s-h/live" : "/live";
-let liveSocket = new LiveSocket(liveSocketPath, Socket, {
-  params: { _csrf_token: csrfToken },
-  hooks: Hooks
-})
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
@@ -277,10 +273,17 @@ Hooks.Downloader = {
 
 
 // add hook to your LiveView connect (this may already be here):
-let liveSocket = new LiveSocket(liveSocketPath, Socket, {
-  // longPollFallbackMs: 2500,
+// let liveSocket = new LiveSocket(liveSocketPath, Socket, {
+//   // longPollFallbackMs: 2500,
+//   params: { _csrf_token: csrfToken },
+//   hooks: Hooks
+// })
+let liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },
-  hooks: Hooks
+  hooks: Hooks,
+  // you can also tweak timeouts here if you still see brief disconnects:
+  // timeout:  40_000,
+  // heartbeatIntervalMs: 30_000
 })
 
 
