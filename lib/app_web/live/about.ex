@@ -9,32 +9,35 @@ defmodule AppWeb.AboutLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <main id="main-content" class="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
+    <main id="main-content" class="max-w-5xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
 
       <!-- Image + Intro -->
       <section
-        class="bg-white p-6 rounded-lg shadow-lg border-4 border-gray-300
+        class="bg-white p-4 rounded-lg shadow-lg border-4 border-gray-300
                transition-colors duration-300 dark:bg-gray-700 dark:border-gray-500
                md:col-span-2"
       >
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200 text-center">
+              {gettext("Hi there!")}
+              <br>
+              <br>
+        </h1>
         <div class="flex flex-col md:flex-row items-center gap-6">
           <img
             src={~p"/images/giraffe.png"}
             alt="Eric Reinhart"
             class="rounded-lg w-48 h-auto flex-shrink-0"
           />
+
           <div class="space-y-4 text-gray-700 dark:text-gray-300 flex-1">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200 text-center">
-              {gettext("Hi there! I’m Eric, a Bucknell CS grad who loves TV, gaming, hiking, and hanging out with friends.")}
-            </h1>
             <p class="text-lg">
-              {gettext("I absolutely love watching movies and TV, especially when it comes to behind-the-scenes content and reading fan theories! When I'm not watching something, I'm usually goofing around with friends or gaming. For gaming, I gravitate towards Minecraft and Pokemon, which have been my favorites since I was a wee lad! I've sunk far more hours into them than I'd like to admit…")}
+              {gettext("I’m Eric, a Bucknell CS grad who absolutely loves watching movies and TV, especially when it comes to behind-the-scenes content and reading fan theories! When I'm not watching something, I'm usually goofing around with friends or gaming. For gaming, I gravitate towards Minecraft and Pokemon, which have been my favorites since I was a wee lad! I've sunk far more hours into them than I'd like to admit…")}
             </p>
             <p class="text-lg">
               {gettext("Anyway, that's a little bit about me. Below you’ll find links to my course assignments, some of my favorite things, and favorite quotes. Enjoy! Remember to stay hydrated!")}
             </p>
             <p class="text-lg">
-              {gettext("P.S. Never challenge me to games with a lot of luck involved; I have really good RNG :)")}
+              {gettext("P.S. Never challenge me to games with a lot of luck involved; I'm really lucky :)")}
             </p>
           </div>
         </div>
@@ -42,10 +45,10 @@ defmodule AppWeb.AboutLive do
 
       <!-- Course Assignments -->
       <section
-        class="bg-white p-6 rounded-lg shadow-lg border-4 border-gray-300
+        class="bg-white p-4 rounded-lg shadow-lg border-4 border-gray-300
                transition-colors duration-300 dark:bg-gray-700 dark:border-gray-500 md:col-span-2"
       >
-        <h2 class="text-2xl text-center text-gray-800 dark:text-gray-200">
+        <h2 class="text-2xl font-bold  text-center text-gray-800 dark:text-gray-200">
           {gettext("Course Assignments")}
         </h2>
         <div class="mt-4 flex flex-wrap justify-center gap-4">
@@ -75,10 +78,10 @@ defmodule AppWeb.AboutLive do
 
       <!-- Favorite Things -->
       <section
-        class="bg-white p-6 rounded-lg shadow-lg border-4 border-gray-300
+        class="bg-white p-4 rounded-lg shadow-lg border-4 border-gray-300
                transition-colors duration-300 dark:bg-gray-700 dark:border-gray-500"
       >
-        <h2 class="text-2xl text-center text-gray-800 dark:text-gray-200">
+        <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-gray-200">
           {gettext("Favorite Things")}
         </h2>
         <div class="mt-4 flex flex-wrap justify-center gap-2">
@@ -106,10 +109,10 @@ defmodule AppWeb.AboutLive do
 
       <!-- Favorite Quotes -->
       <section
-        class="bg-white p-6 rounded-lg shadow-lg border-4 border-gray-300
+        class="bg-white p-4 rounded-lg shadow-lg border-4 border-gray-300
                transition-colors duration-300 dark:bg-gray-700 dark:border-gray-500"
       >
-        <h2 class="text-2xl text-center text-gray-800 dark:text-gray-200">
+        <h2 class="text-2xl font-bold  text-center text-gray-800 dark:text-gray-200">
           {gettext("Favorite Quotes")}
         </h2>
         <p class="mt-4 text-center text-gray-700 dark:text-gray-300">
