@@ -1,0 +1,195 @@
+defmodule AppWeb.Components.UI.Navbar do
+  use Phoenix.Component
+  use Gettext, backend: AppWeb.Gettext
+
+  alias Phoenix.LiveView.JS
+  use Phoenix.VerifiedRoutes,
+    endpoint: AppWeb.Endpoint,
+    router: AppWeb.Router,
+    statics: AppWeb.static_paths()
+
+  # import AppWeb.Components.UI.{Button, Modal, Input}
+  # import AppWeb.CoreComponents
+  # import AppWeb.Components.UI.{Button}
+
+  @doc """
+  Renders a navbar.
+  """
+
+  attr :message_changeset, :map, required: true
+  # attr :locale, :string, required: true
+
+  def navbar(assigns) do
+    ~H"""
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-white focus:text-black focus:p-2 z-50">
+      Skip to Content
+    </a>
+    <nav class="sticky bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md transition-all duration-300 dark:from-gray-800 dark:to-gray-900">
+    <div class="w-screen flex items-center justify-between p-2 relative">
+
+        <!-- Navbar items (visible on larger screens) -->
+        <div class="hidden md:flex md:items-center md:space-x-8 rtl:space-x-reverse flex-grow justify-start ml-12">
+          <.link href={~p"/"} class="text-lg font-bold text-white hover:text-yellow-300 dark:text-white dark:hover:text-yellow-300"> <%= gettext("Home") %> </.link>
+
+          <!-- Miscellaneous Group (Pokemon, Planets, Courses, Gallery, Animations) -->
+          <li class="relative group list-none">
+            <span class="block py-2 px-3 text-lg font-bold text-white hover:text-yellow-300 dark:text-white dark:hover:text-yellow-300 cursor-pointer">
+              <%= gettext("Miscellaneous") %>
+            </span>
+            <div
+              class="
+                absolute left-0 top-full mt-2
+                w-44 py-2
+                bg-white shadow-lg rounded-lg
+                opacity-0 translate-y-2
+                pointer-events-none
+                transform
+                transition-all duration-200 ease-out
+                group-hover:opacity-100
+                group-hover:translate-y-0
+                group-hover:pointer-events-auto
+                dark:bg-gray-700 dark:text-white
+              "
+            >
+
+              <%= for {href, label} <- [
+                {~p"/animations", "Animations"},
+                {~p"/pokemon", "Pokemon"},
+                {~p"/minesweeper", "Minesweeper"},
+                {~p"/charts", "Charts"},
+                {~p"/courses", "Courses"},
+                {~p"/planets", "Planets"}
+              ] do %>
+                <.link href={href} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                  <%= label %>
+                </.link>
+              <% end %>
+            </div>
+          </li>
+
+          <!-- Social Group (Messages, Topics, Chat) -->
+          <li class="relative group list-none">
+            <span class="block py-2 px-3 text-lg font-bold text-white hover:text-yellow-300 dark:text-white dark:hover:text-yellow-300 cursor-pointer">
+              <%= gettext("Social") %>
+            </span>
+            <div class="absolute left-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-lg w-44 py-2 transition-colors duration-300 dark:bg-gray-700 dark:text-white">
+              <%= for {href, label} <- [
+                {~p"/chat", "Chat"},
+                {~p"/messages", "Messages"}
+              ] do %>
+                <.link href={href} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                  <%= label %>
+                </.link>
+              <% end %>
+            </div>
+          </li>
+
+          <.link href={~p"/portfolio"} class="text-lg font-bold text-white hover:text-yellow-300 dark:white dark:hover:text-yellow-300">Portfolio</.link>
+
+
+          <!-- TODO: MediaTracker Links -->
+          <.link href={~p"/tvtracker"} class="text-lg font-bold text-white hover:text-yellow-300 dark:white dark:hover:text-yellow-300">TVTracker</.link>
+
+          <.link href={~p"/tvtracker/search"} class="text-lg font-bold text-white hover:text-yellow-300 dark:white dark:hover:text-yellow-300">Search</.link>
+
+          <.link href={~p"/tvtracker/tv"} class="text-lg font-bold text-white hover:text-yellow-300 dark:white dark:hover:text-yellow-300">Library</.link>
+
+          <.link href={~p"/tvtracker/stats"} class="text-lg font-bold text-white hover:text-yellow-300 dark:white dark:hover:text-yellow-300">Stats</.link>
+
+        </div>
+
+        <!-- Icons (dark mode toggle & hamburger menu) -->
+        <div class="flex items-center md:order-2 space-x-2 rtl:space-x-reverse px-2 relative z-50">
+          <!-- Hamburger Menu Button (only on small screens) -->
+          <button id="menu-button" type="button" class="md:hidden inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="menu" aria-expanded="false" phx-click={toggle_menu()} phx-click-away={close_menu()}>
+          <span class="sr-only"><%= gettext("Open main menu") %></span>
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+            </svg>
+          </button>
+        </div>
+
+
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="menu" class="absolute top-16 left-0 w-full bg-white shadow-lg dark:bg-gray-800 z-40 hidden md:hidden">
+          <ul class="font-medium flex flex-col p-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 dark:border-gray-700">
+          <li>
+            <.link href={~p"/"} class="block py-2 px-3 font-bold text-gray-800 hover:text-yellow-300 dark:text-white dark:hover:text-yellow-300">
+              <%= gettext("Home") %>
+            </.link>
+          </li>
+
+            <!-- Miscellaneous Group (Pokemon, Planets, Courses, Gallery, Animations) -->
+            <li class="relative group list-none">
+              <span class="block py-2 px-3 font-bold text-gray-800 hover:text-yellow-300 dark:text-white dark:hover:text-yellow-300 cursor-pointer">
+                <%= gettext("Miscellaneous") %>
+              </span>
+              <div class="absolute left-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-lg w-44 py-2 transition-colors duration-300 dark:bg-gray-700 dark:text-white z-10">
+                <.link href={~p"/animations"} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                  <%= gettext("Animations") %>
+                </.link>
+                <.link href={~p"/pokemon"} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                  <%= gettext("Pokemon") %>
+                </.link>
+                <.link href={~p"/charts"} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                  <%= gettext("Charts") %>
+                </.link>
+                <.link href={~p"/courses"} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                  <%= gettext("Courses") %>
+                </.link>
+
+                <.link href={~p"/planets"} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                  <%= gettext("Planets") %>
+                </.link>
+              </div>
+            </li>
+
+            <!-- Social Group (Messages, Topics, Chat) -->
+            <li class="relative group list-none">
+              <span class="block py-2 px-3 font-bold text-gray-800 hover:text-yellow-300 dark:text-white dark:hover:text-yellow-300 cursor-pointer">
+                  <%= gettext("Social") %>
+                </span>
+                <div class="absolute left-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-lg w-44 py-2 transition-colors duration-300 dark:bg-gray-700 dark:text-white z-10">
+                  <.link href={~p"/chat"} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                    <%= gettext("Chat") %>
+                  </.link>
+                  <.link href={~p"/messages"} class="px-6 py-2 text-gray-800 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">
+                    <%= gettext("Messages") %>
+                  </.link>
+                </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <%!-- <.modal id="contact-modal" heading="Contact Us">
+      <.simple_form :let={f} for={@message_changeset} class="p-6 space-y-4" phx-change="change-message" phx-submit="save-message">
+        <label for="email">Email</label>
+        <.input field={f[:email]} type="email" id="email"/>
+
+        <label for="subject">Subject</label>
+        <.input field={f[:subject]} type="text" id="subject"/>
+
+        <label for="message">Message</label>
+        <.input field={f[:message]} type="text" id="message"/>
+
+        <.button type="submit" class="w-full">Submit</.button>
+      </.simple_form>
+    </.modal> --%>
+
+    """
+  end
+
+  defp toggle_menu do
+    %JS{}
+    |> JS.toggle_class("hidden", to: "#menu")
+    |> JS.toggle_attribute({"aria-expanded", "true", "false"}, to: "#menu-button")
+  end
+
+  defp close_menu do
+    %JS{}
+    |> JS.add_class("hidden", to: "#menu")
+    |> JS.set_attribute({"aria-expanded", "false"}, to: "#menu-button")
+  end
+end

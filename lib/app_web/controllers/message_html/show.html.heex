@@ -1,0 +1,22 @@
+<.header>
+  <div class="dark:text-white"><%= gettext("Message") %> {@message.id}</div>
+  <:subtitle>
+      <div class="dark:text-white"> <%= gettext("This is a message record from your database.") %></div> <br>
+    </:subtitle>
+</.header>
+
+<.list>
+  <:item title={gettext("Email")}>
+    <span class="dark:text-white">{@message.email}</span>
+  </:item>
+  <:item title={gettext("Subject")}>
+    <span class="dark:text-white">{@message.subject}</span>
+  </:item>
+  <:item title={gettext("Message")}>
+    <span class="dark:text-white">{@message.message}</span>
+  </:item>
+</.list>
+
+<.back navigate={~p"/messages"}>
+    <div class="dark:text-white"><%= gettext("Back to messages") %></div>
+</.back>

@@ -1,0 +1,45 @@
+<.header>
+  Listing Topics
+  <:actions>
+    <.link patch={~p"/topics/new"}>
+      <.button>New Topic</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="topics"
+  rows={@streams.topics}
+  row_click={fn {_id, topic} -> JS.navigate(~p"/topics/#{topic.slug}") end}
+>
+  <:col :let={{_id, topic}} label="Slug">{topic.slug}</:col>
+  <:col :let={{_id, topic}} label="Title">{topic.title}</:col>
+  <:action :let={{_id, topic}}>
+    <div class="sr-only">
+      <.link navigate={~p"/topics/#{topic.slug}"}>Show</.link>
+    </div>
+    <.link patch={~p"/topics/#{topic.slug}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{slug, topic}}>
+    <.link
+      phx-click={JS.push("delete", value: %{slug: topic.slug}) |> hide("##{slug}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="topic-modal"
+  show on_cancel={JS.patch(~p"/topics")}>
+  <.live_component
+    module={AppWeb.TopicLive.FormComponent}
+    id={@topic.slug || :new}
+    title={@page_title}
+    action={@live_action}
+    topic={@topic}
+    patch={~p"/topics"}
+  />
+</.modal>

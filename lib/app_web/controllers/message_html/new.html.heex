@@ -1,0 +1,14 @@
+<div class="dark:bg-gray-900 dark:text-white p-6">
+  <.header >
+    <div class="dark:text-white"> <%= gettext("New Message") %> </div>
+    <:subtitle>
+      <div class="dark:text-white"> <%= gettext("Use this form to manage message records in your database.") %></div> <br>
+    </:subtitle>
+  </.header>
+
+  <.message_form changeset={@message_changeset} action={~p"/messages"} />
+
+  <.back navigate={~p"/messages"}>
+    <div class="dark:text-white"><%= gettext("Back to messages") %></div>
+  </.back>
+</div>

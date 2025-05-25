@@ -1,0 +1,40 @@
+defmodule App.Items.CategoryType do
+  use Ecto.Type
+
+  @categories [
+    {1, %{name: "Category A", year: 2025}},
+    {2, %{name: "Category B", year: 2024}}
+  ]
+
+  def type, do: :integer
+
+  # Provide custom casting rules.
+  # Cast strings into the URI struct to be used at runtime
+
+  def cast(category) when category in ["1", "2"] do
+    cast(String.to_integer(category))
+  end
+
+  def cast(category) when category in [1, 2] do
+    {:ok, category}
+  end
+
+  # Accept casting of URI structs as well
+  def cast(%{name: name}) when name in ["Category A", "Category B"], do: {:ok, elem(Enum.find(@categories, &(elem(&1, 1).name == name)), 0)}
+
+  # Everything else is a failure though
+  def cast(_), do: :error
+
+  # When loading data from the database, as long as it's a map,
+  # we just put the data back into a URI struct to be stored in
+  # the loaded schema struct.
+  def load(i) when is_integer(i) do
+    {:ok, elem(Enum.find(@categories, &(elem(&1, 0) == i)), 1)}
+  end
+
+  # When dumping data to the database, we *expect* a URI struct
+  # but any value could be inserted into the schema struct at runtime,
+  # so we need to guard against them.
+  def dump(category) when category in [1, 2], do: {:ok, category}
+  def dump(_), do: :error
+end

@@ -1,0 +1,34 @@
+defmodule AppWeb.PlanetController do
+  use AppWeb, :controller
+  alias App.Planets
+
+  # GET /planets -> Returns all planets
+  def planets(conn, %{}) do
+    render(conn, :list, planets: Planets.list_planets())
+  end
+
+  # GET /planets/random -> Show a random planet's info
+  def random_planet(conn, _params) do
+    planet = Planets.get_random_planet()
+    render(conn, :show, planet: planet)
+  end
+
+  # GET /planets/:n -> Show planet by id
+  def planet_by_id(conn, %{"n" => n}) do
+    # Try to convert n to an integer
+    case Integer.parse(n) do
+      {id, _rest} ->
+        case Planets.get_planet(id) do
+          nil ->
+            render(conn, "error.html", error: "Invalid planet ID!")
+
+          planet ->
+            render(conn, :show, planet: planet)
+        end
+
+      :error ->
+        # Invalid input shows error page
+        render(conn, "error.html", error: "Invalid planet ID!")
+    end
+  end
+end

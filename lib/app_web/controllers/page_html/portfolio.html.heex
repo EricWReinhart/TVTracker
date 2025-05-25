@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Preview</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+</head>
+<body>
+    <!-- Button to trigger PDF preview -->
+    <button id="previewButton">Preview PDF</button>
+
+    <!-- Container to hold PDF preview -->
+    <div id="pdf-container" style="width: 100%; height: 500px; overflow: auto;"></div>
+
+    <script>
+        document.getElementById('previewButton').addEventListener('click', function() {
+            // Path to your PDF file
+            var url = 'path/to/your/pdf-file.pdf';
+
+            // Container to display PDF
+            var container = document.getElementById('pdf-container');
+            container.innerHTML = ''; // Clear the container before loading a new PDF
+
+            // Load and render the PDF
+            pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                // Assuming you're rendering the first page of the PDF
+                pdf.getPage(1).then(function(page) {
+                    var scale = 1.5; // You can adjust the scale
+                    var viewport = page.getViewport({ scale: scale });
+
+                    // Create a canvas element to render the PDF page
+                    var canvas = document.createElement('canvas');
+                    container.appendChild(canvas);
+                    var context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    // Render the page into the canvas
+                    page.render({ canvasContext: context, viewport: viewport });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

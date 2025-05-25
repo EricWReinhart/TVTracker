@@ -1,0 +1,24 @@
+<h1 class="text-center text-4xl font-bold mb-5 text-gray-800 dark:text-gray-200">
+  Planets
+</h1>
+
+<table class="w-full border-collapse rounded-lg shadow-lg overflow-hidden">
+  <thead>
+    <tr class="bg-sky-400 text-white text-lg">
+      <th class="px-4 py-3 border-2 border-cadet-blue">ID</th>
+      <th class="px-4 py-3 border-2 border-cadet-blue">Name</th>
+      <th class="px-4 py-3 border-2 border-cadet-blue">Distance (AU)</th>
+      <th class="px-4 py-3 border-2 border-cadet-blue">Orbital Period (Years)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for planet <- @planets do %>
+      <tr class="even:bg-cyan-100 odd:bg-blue-50 hover:bg-blue-300 dark:even:bg-cyan-900 dark:odd:bg-blue-950 dark:hover:bg-blue-700 cursor-pointer">
+        <td class="px-4 py-3 text-center text-lg border-2 border-cadet-blue text-gray-900 dark:text-gray-200"><%= planet.id %></td>
+        <td class="px-4 py-3 text-center text-lg border-2 border-cadet-blue text-gray-900 dark:text-gray-200"><%= planet.name %></td>
+        <td class="px-4 py-3 text-center text-lg border-2 border-cadet-blue text-gray-900 dark:text-gray-200"><%= planet.distance %></td>
+        <td class="px-4 py-3 text-center text-lg border-2 border-cadet-blue text-gray-900 dark:text-gray-200"><%= planet.orbital_period %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

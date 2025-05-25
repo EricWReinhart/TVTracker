@@ -1,0 +1,20 @@
+defmodule App.Content.PageTag do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "pages_tags" do
+    belongs_to(:page, App.Content.Page)
+    belongs_to(:tag, App.Content.Tag)
+  end
+
+  @doc false
+  @required ~w(page_id tag_id)a
+  def changeset(page, attrs) do
+    page
+    |> cast(attrs, @required)
+    |> validate_required(@required)
+    |> foreign_key_constraint(:page_id)
+    |> foreign_key_constraint(:topic_id)
+    |> unique_constraint([:page_id, :tag_id])
+  end
+end

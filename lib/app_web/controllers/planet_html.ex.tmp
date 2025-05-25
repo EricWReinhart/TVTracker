@@ -1,0 +1,10 @@
+defmodule AppWeb.PlanetHTML do
+  @moduledoc """
+  This module contains pages rendered by PlanetController.
+
+  See the `planet_html` directory for all templates available.
+  """
+  use AppWeb, :html
+
+  embed_templates "planet_html/*"
+end

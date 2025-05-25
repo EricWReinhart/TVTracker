@@ -1,0 +1,104 @@
+<div class="grid gap-4">
+  <div>
+    <img
+      class={
+        if @fade_out do
+          "h-auto max-w-full rounded-lg animate-fade-out"
+        else
+          if @fade_in do
+            "h-auto max-w-full rounded-lg animate-fade-in"
+          else
+            "h-auto max-w-full rounded-lg"
+          end
+        end
+      }
+      src={@selected_image}
+      alt="Featured image"
+    >
+  </div>
+  <div class="grid grid-cols-5 gap-4">
+    <div>
+      <button type="button" phx-click="select-image" phx-value-id="1">
+        <img
+          class="h-auto max-w-full rounded-lg transition-transform duration-200 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-indigo-400"
+          src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg"
+          alt=""
+        >
+      </button>
+    </div>
+    <div>
+      <button type="button" phx-click="select-image" phx-value-id="2">
+        <img
+          class="h-auto max-w-full rounded-lg transition-transform duration-200 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-indigo-400"
+          src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg"
+          alt=""
+        >
+      </button>
+    </div>
+    <div>
+      <button type="button" phx-click="select-image" phx-value-id="3">
+        <img
+          class="h-auto max-w-full rounded-lg transition-transform duration-200 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-indigo-400"
+          src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg"
+          alt=""
+        >
+      </button>
+    </div>
+    <div>
+      <button type="button" phx-click="select-image" phx-value-id="4">
+        <img
+          class="h-auto max-w-full rounded-lg transition-transform duration-200 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-indigo-400"
+          src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg"
+          alt=""
+        >
+      </button>
+    </div>
+    <div>
+      <button type="button" phx-click="select-image" phx-value-id="5">
+        <img
+          class="h-auto max-w-full rounded-lg transition-transform duration-200 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-indigo-400"
+          src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg"
+          alt=""
+        >
+      </button>
+    </div>
+  </div>
+</div>
+<%!--
+<div class="grid gap-4">
+  <div class="w-full flex justify-center">
+    <img
+      class={
+        "max-h-[70vh] w-full object-contain rounded-lg transition-all duration-300" <>
+        if @fade_out do
+          " animate-fade-out"
+        else
+          if @fade_in do
+            " animate-fade-in"
+          else
+            ""
+          end
+        end
+      }
+      src={"/images/gallery/#{@selected_id}.jpg"}
+      alt="Selected image"
+    >
+  </div>
+  <div class="grid grid-cols-5 gap-4">
+    <%= for id <- @images do %>
+      <div>
+        <button type="button" phx-click="select-image" phx-value-id={id}>
+          <img
+            class={
+              "h-auto max-w-full rounded-lg transition-transform duration-200 ease-in-out transform hover:scale-105 hover:ring-2 hover:ring-indigo-400" <>
+              if @selected_id == id, do: " ring-4 ring-indigo-600", else: ""
+            }
+            src={"/images/gallery/#{id}_thumbnail.jpg"}
+            alt={"Thumbnail #{id}"}
+          >
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
+ --%>

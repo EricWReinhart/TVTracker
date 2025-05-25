@@ -1,0 +1,28 @@
+<.header>
+  <div class="dark:text-white">Listing Courses</div>
+  <:actions>
+    <.link href={~p"/courses/new"}>
+      <.button>New Course</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="courses" rows={@courses} row_click={&JS.navigate(~p"/courses/#{&1}")}>
+  <:col :let={course} label="Semester">
+    <span class="dark:text-white">{course.semester}</span>
+  </:col>
+  <:col :let={course} label="Name">
+    <span class="dark:text-white">{course.name}</span>
+  </:col>
+  <:action :let={course}>
+    <div>
+      <.link navigate={~p"/courses/#{course}"} class="dark:text-white">Show</.link>
+    </div>
+    <.link navigate={~p"/courses/#{course}/edit"} class="dark:text-white">Edit</.link>
+  </:action>
+  <:action :let={course}>
+    <.link href={~p"/courses/#{course}"} method="delete" data-confirm="Are you sure?" class="dark:text-white">
+      Delete
+    </.link>
+  </:action>
+</.table>

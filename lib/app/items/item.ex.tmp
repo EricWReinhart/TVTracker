@@ -1,0 +1,40 @@
+defmodule App.Items.Item do
+  use Ecto.Schema
+  import Ecto.Changeset
+  import Bitwise
+
+  @types [wearable: 1, static: 2, intangible: 3]
+
+  schema "items" do
+    field(:name, :string)
+    field(:attributes, App.Items.AttributesType)
+
+    Enum.each(1..8, &field(String.to_atom("attr#{&1}"), :boolean, default: false, virtual: true))
+
+    field(:type, Ecto.Enum, values: @types)
+    field(:attributes_value, :integer, virtual: true)
+    # field :category, App.Items.CategoryType
+
+    timestamps(type: :utc_datetime)
+  end
+
+  @required ~w(name type)a
+  @optional ~w(attr1 attr2 attr3 attr4 attr5 attr6 attr7 attr8)a
+  def changeset(item, attrs) do
+    item
+    |> cast(attrs, @required ++ @optional)
+    |> validate_required(@required)
+    |> prepare_changes(fn changeset ->
+      attrs =
+        1..8
+        |> Enum.map(fn i -> {i - 1, get_field(changeset, String.to_atom("attr#{i}"), false)} end)
+        |> Enum.reduce(0, fn {index, value}, acc ->
+          if value, do: acc ||| 1 <<< index, else: acc
+        end)
+
+      put_change(changeset, :attributes, attrs)
+    end)
+  end
+
+  def type_options, do: Keyword.keys(@types)
+end

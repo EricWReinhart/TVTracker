@@ -1,0 +1,69 @@
+defmodule AppWeb.PageLive.Index do
+  use AppWeb, :live_view
+
+  alias App.Content
+  alias App.Content.Page
+
+  @impl true
+  def mount(%{"slug" => slug}, _session, socket) do
+    topic = Content.get_topic_by_slug!(slug)
+    pages = Content.list_pages_by_topic_slug(slug)
+    topic_options = Content.list_topics()
+
+    {:ok, assign(socket, topic: topic, pages: pages, slug: slug, topic_options: topic_options)}
+  end
+
+  @impl true
+  def handle_params(%{"slug" => slug} = params, _, socket) do
+    topic = Content.get_topic_by_slug!(slug)
+    pages = Content.list_pages_by_topic_slug(slug)
+    topic_options = Content.list_topics() # TODO: may delete
+
+    {:noreply,
+    socket
+    |> assign(:topic, topic)
+    |> assign(:topic_options, topic_options) # TODO: may delete
+    |> stream(:pages, pages)
+    |> apply_action(socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Page")
+    |> assign(:page, Content.get_page!(id))
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:page_title, "New Page")
+    |> assign(:page, %Page{})
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Listing Pages")
+    |> assign(:page, nil)
+  end
+
+  @impl true
+  def handle_info({AppWeb.PageLive.FormComponent, {:saved, {:ok, page}}}, socket) do
+    page = App.Repo.preload(page, [:topic, :tags]) # Ensure associations are loaded
+    {:noreply, stream_insert(socket, :pages, page)}
+  end
+
+  def handle_info(message, socket) do
+    AppWeb.LiveHelper.handle_info(message, socket)
+  end
+
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    page = Content.get_page!(id)
+    {:ok, _} = Content.delete_page(page)
+
+    {:noreply, stream_delete(socket, :pages, page)}
+  end
+
+  def handle_event(event, params, socket) do
+    AppWeb.LiveHelper.handle_event(event, params, socket)
+  end
+end

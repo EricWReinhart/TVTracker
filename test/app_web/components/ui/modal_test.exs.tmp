@@ -1,0 +1,76 @@
+# defmodule AppWeb.Components.UI.ModalTest do
+#   use AppWeb.ComponentCase
+
+#   import AppWeb.Components.UI.Modal
+
+#   test "default modal" do
+#     assigns = %{}
+
+#     html =
+#       rendered_to_string(
+#         ~H"""
+#         <.modal heading="Test Modal" backdrop="dynamic">
+#           <p>Modal content here</p>
+#         </.modal>
+#         """
+#       )
+
+#     # Verify that the heading and content are rendered.
+#     assert html =~ "Test Modal"
+#     assert html =~ "Modal content here"
+
+#     # Verify that the modal has the expected id and is hidden by default.
+#     assert html =~ "id=\"default-modal\""
+#     assert html =~ "hidden"
+
+#     # For a dynamic backdrop, the outer container should have a phx-click attribute.
+#     assert html =~ "phx-click="
+#   end
+
+#   test "small modal variant" do
+#     assigns = %{}
+
+#     html =
+#       rendered_to_string(
+#         ~H"""
+#         <.modal heading="Small Modal" backdrop="static" small>
+#           <p>Small modal content</p>
+#         </.modal>
+#         """
+#       )
+
+#     # A small modal should use the "max-w-md" class in the inner container.
+#     assert html =~ "max-w-md"
+
+
+#     # Check that the heading and content are rendered.
+#     assert html =~ "Small Modal"
+#     assert html =~ "Small modal content"
+#   end
+
+#   test "open_modal JS command returns a JS struct with proper attributes" do
+#     js = show_modal()
+#     assert %Phoenix.LiveView.JS{} = js
+
+#     js_map = Map.from_struct(js)
+
+#     # Verify that there is at least one operation that shows the modal targeting "#default-modal"
+#     assert Enum.any?(js_map.ops, fn
+#       ["show", %{to: "#default-modal"}] -> true
+#       _ -> false
+#     end)
+#   end
+
+#   test "close_modal JS command returns a JS struct with proper attributes" do
+#     js = hide_modal()
+#     assert %Phoenix.LiveView.JS{} = js
+
+#     js_map = Map.from_struct(js)
+
+#     # Verify that there is at least one operation that hides the modal targeting "#default-modal"
+#     assert Enum.any?(js_map.ops, fn
+#       ["hide", %{to: "#default-modal"}] -> true
+#       _ -> false
+#     end)
+#   end
+# end

@@ -1,0 +1,42 @@
+defmodule AppWeb.ThermostatLive do
+  use AppWeb, :live_view
+
+  # alias App.Notification
+  # alias App.Notification.Message
+
+  def render(assigns) do
+    ~H"""
+    <div class="text-gray-900 dark:text-gray-100">
+      Current temperature:
+      <.button phx-click="change_temperature" phx-value-direction="down">-</.button>
+      {@temperature}°F
+      <.button phx-click="change_temperature" phx-value-direction="up">+</.button>
+
+      <.live_component module={AppWeb.Components.Live.Toggle} id="toggle" label="Fun Toggle" />
+
+    </div>
+    """
+  end
+
+  def mount(_params, _session, socket) do
+    temperature = 70 # Let's assume a fixed temperature for now
+    # changeset = Notification.change_message(%Message{})
+    {:ok,
+     socket
+     |> assign(:temperature, temperature)
+    #  |> assign(:message_changeset, changeset)
+    }
+  end
+
+  def handle_event("change_temperature", %{"direction" => "down"}, socket) do
+    {:noreply, update(socket, :temperature, &(&1 - 1))}
+  end
+
+  def handle_event("change_temperature", %{"direction" => "up"}, socket) do
+    {:noreply, update(socket, :temperature, &(&1 + 1))}
+  end
+
+  def handle_event(event, unsigned_params, socket) do
+    AppWeb.LiveHelper.handle_event(event, unsigned_params, socket)
+  end
+end

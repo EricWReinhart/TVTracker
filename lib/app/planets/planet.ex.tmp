@@ -1,0 +1,25 @@
+defmodule App.Planets.Planet do
+  use Ecto.Schema
+
+  import Ecto.Changeset
+
+  # %{id: 1, name: "Mercury", moons: 0, temperature: 167, mass: 0.33}
+
+  @primary_key false
+  embedded_schema do
+    field :id, :integer
+    field :name, :string
+    field :moons, :integer
+    field :temperature, :float
+    field :mass, :float
+  end
+
+  @required ~w(id name moons temperature mass)a
+  def build!(params \\ %{}) do
+    %__MODULE__{}
+    |> cast(params, @required)
+    |> validate_required(@required)
+    |> validate_number(:mass, greater_than: 0)
+    |> apply_action!(:insert)
+  end
+end

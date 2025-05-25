@@ -1,0 +1,31 @@
+<.header >
+  <div class="dark:text-white"> <%= gettext("Listing Messages") %> </div>
+  <:actions>
+    <.link href={~p"/messages/new"}>
+      <.button><%= gettext("New Message") %></.button>
+    </.link>
+  </:actions>
+</.header>
+<.table id="messages" rows={@messages} row_click={&JS.navigate(~p"/messages/#{&1}")}>
+  <:col :let={message} label={gettext("Email")}>
+  <span class="dark:text-white"><%= message.email %></span>
+  </:col>
+  <:col :let={message} label={gettext("Subject")}>
+    <span class="dark:text-white"><%= message.subject %></span>
+  </:col>
+  <:col :let={message} label={gettext("Message")}>
+    <span class="dark:text-white"><%= message.message %></span>
+  </:col>
+
+  <:action :let={message}>
+    <div class="sr-only">
+      <.link navigate={~p"/messages/#{message}"} class="dark:text-white"><%= gettext("Show") %></.link>
+    </div>
+  </:action>
+  <:action :let={message}>
+    <.link href={~p"/messages/#{message}"} method="delete" data-confirm={gettext("Are you sure?")} class="dark:text-white">
+      <%= gettext("Delete") %>
+    </.link>
+
+  </:action>
+</.table>

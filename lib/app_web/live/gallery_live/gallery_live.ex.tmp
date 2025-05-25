@@ -1,0 +1,70 @@
+defmodule AppWeb.GalleryLive do
+  use AppWeb, :live_view
+
+  def mount(_params, _session, socket) do
+    default_image = "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg"
+
+    {:ok, assign(socket, selected_image: default_image, fade_out: false, fade_in: false)}
+  end
+
+  def handle_event("select-image", %{"id" => id}, socket) do
+    images = %{
+      1 => "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg",
+      2 => "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg",
+      3 => "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg",
+      4 => "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg",
+      5 => "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg"
+    }
+
+    selected_image = Map.get(images, String.to_integer(id), nil)
+
+    # Trigger the fade-out effect first
+    socket = assign(socket, fade_out: true, fade_in: false)
+
+    # After 500ms (fade-out duration), update the selected image and trigger fade-in
+    Process.send_after(self(), {:update_image, selected_image}, 500)
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:update_image, selected_image}, socket) do
+    # Update the image after the fade-out completes and trigger fade-in
+    {:noreply, assign(socket, selected_image: selected_image, fade_out: false, fade_in: true)}
+  end
+end
+
+
+# defmodule AppWeb.GalleryLive do
+#   use AppWeb, :live_view
+
+#   def mount(_params, _session, socket) do
+#     images = [1, 2, 3]
+
+#     {:ok,
+#      assign(socket,
+#        selected_id: 1,
+#        fade_out: false,
+#        fade_in: false,
+#        images: images
+#      )}
+#   end
+
+#   def handle_event("select-image", %{"id" => id}, socket) do
+#     image_id = String.to_integer(id)
+
+#     socket = assign(socket, fade_out: true, fade_in: false)
+
+#     Process.send_after(self(), {:update_image, image_id}, 500)
+
+#     {:noreply, socket}
+#   end
+
+#   def handle_info({:update_image, image_id}, socket) do
+#     {:noreply,
+#      assign(socket,
+#        selected_id: image_id,
+#        fade_out: false,
+#        fade_in: true
+#      )}
+#   end
+# end

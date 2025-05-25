@@ -1,0 +1,371 @@
+defmodule App.Content do
+  @moduledoc """
+  The Content context.
+  """
+
+  import Ecto.Query, warn: false
+  alias App.Repo
+
+  alias App.Content.{Topic, Page, Tag}
+
+  def list_pages_by_topic(topic_id) do
+    Repo.all(from p in Page, where: p.topic_id == ^topic_id, preload: :tags)
+  end
+
+  def list_pages_by_topic_slug(slug) do
+    topic = Repo.get_by!(Topic, slug: slug)
+    Repo.all(from p in Page, where: p.topic_id == ^topic.id)
+  end
+
+  @doc """
+  Returns the list of topics.
+
+  ## Examples
+
+      iex> list_topics()
+      [%Topic{}, ...]
+
+  """
+  def list_topics do
+    Repo.all(Topic)
+    # |> Enum.map(&{&1.title, &1.id})
+  end
+
+  @doc """
+  Gets a single topic.
+
+  Raises `Ecto.NoResultsError` if the Topic does not exist.
+
+  ## Examples
+
+      iex> get_topic!(123)
+      %Topic{}
+
+      iex> get_topic!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_topic!(id), do: Repo.get!(Topic, id)
+
+  # slug
+  def get_topic_by_slug!(slug), do: Repo.get_by!(Topic, slug: slug)
+
+  @doc """
+  Creates a topic.
+
+  ## Examples
+
+      iex> create_topic(%{field: value})
+      {:ok, %Topic{}}
+
+      iex> create_topic(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_topic(attrs \\ %{}) do
+    %Topic{}
+    |> Topic.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a topic.
+
+  ## Examples
+
+      iex> update_topic(topic, %{field: new_value})
+      {:ok, %Topic{}}
+
+      iex> update_topic(topic, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_topic(%Topic{} = topic, attrs) do
+    topic
+    |> Topic.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a topic.
+
+  ## Examples
+
+      iex> delete_topic(topic)
+      {:ok, %Topic{}}
+
+      iex> delete_topic(topic)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_topic(%Topic{} = topic) do
+    Repo.delete(topic)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking topic changes.
+
+  ## Examples
+
+      iex> change_topic(topic)
+      %Ecto.Changeset{data: %Topic{}}
+
+  """
+  def change_topic(%Topic{} = topic, attrs \\ %{}) do
+    Topic.changeset(topic, attrs)
+  end
+
+  alias App.Content.Page
+
+  @doc """
+  Returns the list of pages.
+
+  ## Examples
+
+      iex> list_pages()
+      [%Page{}, ...]
+
+  """
+  def list_pages do
+    Repo.all(Page)
+  end
+
+  @doc """
+  Gets a single page.
+
+  Raises `Ecto.NoResultsError` if the Page does not exist.
+
+  ## Examples
+
+      iex> get_page!(123)
+      %Page{}
+
+      iex> get_page!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_page!(id), do: Repo.get!(from(p in Page, preload: [:tags, :page_tags]), id)
+
+  @doc """
+  Creates a page.
+
+  ## Examples
+
+      iex> create_page(%{field: value})
+      {:ok, %Page{}}
+
+      iex> create_page(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_page(attrs \\ %{}) do
+    %Page{}
+    |> Page.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a page.
+
+  ## Examples
+
+      iex> update_page(page, %{field: new_value})
+      {:ok, %Page{}}
+
+      iex> update_page(page, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_page(%Page{} = page, attrs) do
+    page
+    |> Page.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a page.
+
+  ## Examples
+
+      iex> delete_page(page)
+      {:ok, %Page{}}
+
+      iex> delete_page(page)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_page(%Page{} = page) do
+    Repo.delete(page)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking page changes.
+
+  ## Examples
+
+      iex> change_page(page)
+      %Ecto.Changeset{data: %Page{}}
+
+  """
+  def change_page(page, attrs \\ %{}) do
+    page
+    |> App.Content.Page.changeset(attrs)
+  end
+
+  alias App.Content.Tag
+
+  @doc """
+  Returns the list of tags.
+
+  ## Examples
+
+      iex> list_tags()
+      [%Tag{}, ...]
+
+  """
+  def list_tags do
+    Repo.all(Tag)
+  end
+
+  def list_tag_options do
+    Repo.all(from(t in Tag, select: {t.name, t.id}))
+  end
+
+  @doc """
+  Gets a single tag.
+
+  Raises `Ecto.NoResultsError` if the Tag does not exist.
+
+  ## Examples
+
+      iex> get_tag!(123)
+      %Tag{}
+
+      iex> get_tag!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_tag!(id), do: Repo.get!(Tag, id)
+
+  @doc """
+  Creates a tag.
+
+  ## Examples
+
+      iex> create_tag(%{field: value})
+      {:ok, %Tag{}}
+
+      iex> create_tag(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_tag(attrs \\ %{}) do
+    %Tag{}
+    |> Tag.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a tag.
+
+  ## Examples
+
+      iex> update_tag(tag, %{field: new_value})
+      {:ok, %Tag{}}
+
+      iex> update_tag(tag, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_tag(%Tag{} = tag, attrs) do
+    tag
+    |> Tag.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a tag.
+
+  ## Examples
+
+      iex> delete_tag(tag)
+      {:ok, %Tag{}}
+
+      iex> delete_tag(tag)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_tag(%Tag{} = tag) do
+    Repo.delete(tag)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking tag changes.
+
+  ## Examples
+
+      iex> change_tag(tag)
+      %Ecto.Changeset{data: %Tag{}}
+
+  """
+  def change_tag(%Tag{} = tag, attrs \\ %{}) do
+    Tag.changeset(tag, attrs)
+  end
+
+  @doc """
+  Creates a page along with its associated tags.
+
+  ## Examples
+
+      iex> create_page_with_tags(%{field: value, tags: ["tag1", "tag2"]})
+      {:ok, %Page{}}
+
+      iex> create_page_with_tags(%{field: bad_value, tags: ["tag1", "tag2"]})
+      {:error, %Ecto.Changeset{}}
+  """
+  def create_page_with_tags(attrs \\ %{}) do
+    # Extract tags from the input
+    tags = Map.get(attrs, :tags, [])
+
+    # Create the page changeset
+    changeset = Page.changeset(%Page{}, attrs)
+
+    # Start a transaction to ensure both the page and tags are inserted together
+    Repo.transaction(fn ->
+      case Repo.insert(changeset) do
+        {:ok, page} ->
+          # Now we insert the associated tags
+          Enum.each(tags, fn tag_name ->
+            tag = create_or_get_tag(tag_name)
+            IO.inspect(tag, label: "Tag")  # Optional: Inspect the tag for debugging
+            associate_tag_with_page(page, tag)  # Pass the entire tag struct
+          end)
+
+          {:ok, page}
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          {:error, changeset}
+      end
+    end)
+  end
+
+  # Helper function to either get an existing tag or create a new one
+  defp create_or_get_tag(name) do
+    case Repo.get_by(Tag, name: name) do
+      nil ->
+        # If tag does not exist, create it
+        {:ok, tag} = create_tag(%{name: name})
+        tag
+      tag -> tag
+    end
+  end
+
+  # Associate the tag with the page by inserting into the pages_tags join table
+  defp associate_tag_with_page(page, tag) do
+    # Ensure that the tag's ID is being accessed correctly
+    Repo.insert!(%App.Content.PageTag{
+      page_id: page.id,
+      tag_id: tag.id  # Make sure this is accessing the correct ID field of the tag
+    })
+  end
+end

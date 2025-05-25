@@ -1,0 +1,47 @@
+- id: 1
+  name: Mercury
+  moons: 0
+  temperature: 167
+  mass: 0.33
+
+- id: 2
+  name: Venus
+  moons: 0
+  temperature: 464
+  mass: 4.87
+
+- id: 3
+  name: Earth
+  moons: 1
+  temperature: 15
+  mass: 5.97
+
+- id: 4
+  name: Mars
+  moons: 2
+  temperature: -65
+  mass: 0.642
+
+- id: 5
+  name: Jupiter
+  moons: 95
+  temperature: -110
+  mass: 1898
+
+- id: 6
+  name: Saturn
+  moons: 274
+  temperature: -140
+  mass: 568
+
+- id: 7
+  name: Uranus
+  moons: 28
+  temperature: -195
+  mass: 86.8
+
+- id: 8
+  name: Neptune
+  moons: 16
+  temperature: -200
+  mass: 102

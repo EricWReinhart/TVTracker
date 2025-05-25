@@ -1,0 +1,22 @@
+<.navbar_tv message_changeset={@message_changeset} />
+
+<%!-- <.navbar_media message_changeset={@message_changeset} /> --%>
+<%!--
+<.modal2 heading="Contact us" backdrop="static" small>
+  <.simple_form :let={f} for={@message_changeset} action={~p"/messages"} class="mb-6">
+    <.input field={f[:email]} type="text" label="Email" />
+    <.input field={f[:subject]} type="text" label="Subject" />
+    <.input field={f[:message]} type="text" label="Message" />
+    <:actions>
+      <.button type="submit">Save Message</.button>
+    </:actions>
+  </.simple_form>
+
+</.modal2> --%>
+
+<main class="px-4 py-4 sm:px-6 lg:px-8">
+    <.flash_group flash={@flash} />
+    {@inner_content}
+</main>
+
+<%!-- <.footer /> --%>

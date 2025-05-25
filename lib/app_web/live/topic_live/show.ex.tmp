@@ -1,0 +1,34 @@
+defmodule AppWeb.TopicLive.Show do
+  use AppWeb, :live_view
+
+  alias App.Content
+
+  @impl true
+  def mount(_params, _session, socket) do
+    {:ok, socket}
+  end
+
+  @impl true
+  def handle_params(%{"slug" => slug, "id" => id}, _, socket) do
+    topic = Content.get_topic_by_slug!(slug)
+    page = Content.get_page!(id)
+
+    {:noreply,
+     socket
+     |> assign(:page_title, page_title(socket.assigns.live_action))
+     |> assign(:topic, topic)
+     |> assign(:page, page)}
+  end
+
+  def handle_params(%{"slug" => slug}, _, socket) do
+    topic = Content.get_topic_by_slug!(slug)
+
+    {:noreply,
+     socket
+     |> assign(:page_title, page_title(socket.assigns.live_action))
+     |> assign(:topic, topic)}
+  end
+
+  defp page_title(:show), do: "Show Topic"
+  defp page_title(:edit), do: "Edit Topic"
+end

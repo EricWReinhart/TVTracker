@@ -1,0 +1,39 @@
+defmodule AppWeb.PlanetControllerTest do
+  use AppWeb.ConnCase
+
+  alias App.Planets
+
+  test "GET /planets returns all planets", %{conn: conn} do
+    conn = get(conn, ~p"/planets")
+    assert html_response(conn, 200) =~ "Mercury"
+    assert html_response(conn, 200) =~ "Neptune"
+  end
+
+  test "GET /planets/random returns a random planet", %{conn: conn} do
+    :rand.seed(:exsss, {100, 101, 102})
+
+    conn = get(conn, ~p"/planets/random")
+    assert html_response(conn, 200) =~ "Saturn"
+
+    conn = get(conn, ~p"/planets/random")
+    assert html_response(conn, 200) =~ "Earth"
+  end
+
+  test "GET /planets/:n returns the correct planet", %{conn: conn} do
+    planet = Planets.get_planet(3) # Earth
+    conn = get(conn, ~p"/planets/#{planet.id}")
+    assert html_response(conn, 200) =~ "Earth"
+    assert html_response(conn, 200) =~ "1.0"
+  end
+
+  test "GET /planets/:n returns an error message for an invalid planet id", %{conn: conn} do
+    conn = get(conn, ~p"/planets/999")
+    assert response(conn, 200) =~ "Invalid planet ID!"
+  end
+
+  test "GET /planets/:a returns an error message for a non-numeric planet id", %{conn: conn} do
+    conn = get(conn, ~p"/planets/abc")
+    assert response(conn, 200) =~ "Invalid planet ID!"
+  end
+
+end

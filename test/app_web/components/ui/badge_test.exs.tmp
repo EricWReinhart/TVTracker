@@ -1,0 +1,109 @@
+defmodule AppWeb.Components.UI.BadgeTest do
+  use AppWeb.ComponentCase
+
+  import AppWeb.Components.UI.Badge
+
+  test "default badge" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.badge class="custom-class">Default Badge</.badge>
+        """
+      )
+
+    assert html =~ "custom-class"  # No need to worry about order
+    assert html =~ "type=\"badge\""
+    assert html =~ "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+    assert html =~ "Default Badge"
+    assert html =~ "</badge>"
+  end
+
+  test "dark badge" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.badge color="dark" class="custom-class">Dark Badge</.badge>
+        """
+      )
+
+    assert html =~ "custom-class"  # No need to worry about order
+    assert html =~ "type=\"badge\""
+    assert html =~ "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+    assert html =~ "Dark Badge"
+    assert html =~ "</badge>"
+  end
+
+  test "red badge" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.badge color="red" class="custom-class">Red Badge</.badge>
+        """
+      )
+
+    assert html =~ "custom-class"  # No need to worry about order
+    assert html =~ "type=\"badge\""
+    assert html =~ "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+    assert html =~ "Red Badge"
+    assert html =~ "</badge>"
+  end
+
+  test "badge with custom classes" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.badge color="green" class="custom-class">Green Badge</.badge>
+        """
+      )
+
+    assert html =~ "custom-class"  # No need to worry about order
+    assert html =~ "type=\"badge\""
+    assert html =~ "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+    assert html =~ "Green Badge"
+    assert html =~ "</badge>"
+  end
+
+  test "large badge" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.badge color="indigo" large class="custom-class">Large Indigo Badge</.badge>
+        """
+      )
+
+    # Make sure the custom class is present in the output
+    assert html =~ "custom-class"
+    # Ensure other classes are there as well
+    assert html =~ "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
+    assert html =~ "Large Indigo Badge"
+    assert html =~ "</badge>"
+  end
+
+  test "badge with multiple colors" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.badge color="purple" class="custom-class">Purple Badge</.badge>
+        <.badge color="pink" class="custom-class">Pink Badge</.badge>
+        """
+      )
+
+    assert html =~ "custom-class"  # No need to worry about order
+    assert html =~ "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+    assert html =~ "Purple Badge"
+    assert html =~ "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300"
+    assert html =~ "Pink Badge"
+  end
+end

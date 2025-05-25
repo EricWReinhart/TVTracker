@@ -1,0 +1,51 @@
+defmodule App.Items.AttributesType do
+  use Ecto.Type
+  import Bitwise
+
+  @attribute_keys 1..8 |> Enum.map(&String.to_atom("attr#{&1}"))
+
+  def type, do: :integer
+
+  # Casting from input values (map of boolean attributes) into the integer format
+  def cast(%{} = attrs) do
+    attrs =
+      @attribute_keys
+      |> Enum.map(fn key -> {key, Map.get(attrs, key, false)} end)
+      |> Enum.reduce(0, fn {key, value}, acc ->
+        index =
+          (String.slice(Atom.to_string(key), 4..(String.length(Atom.to_string(key)) - 1))
+           |> String.to_integer()) - 1
+
+        if value, do: acc ||| 1 <<< index, else: acc
+      end)
+
+      # IO.inspect(attrs)
+    {:ok, attrs}
+  end
+
+  def cast(_), do: :error
+
+  # Loading from the database (convert integer to a map of boolean attributes)
+  def load(int) when is_integer(int) do
+    attrs =
+      @attribute_keys
+      |> Enum.map(fn key ->
+        index =
+          (String.slice(Atom.to_string(key), 4..(String.length(Atom.to_string(key)) - 1))
+           |> String.to_integer()) - 1
+
+        {key, (int &&& 1 <<< index) != 0}
+      end)
+      |> Enum.into(%{})
+
+      IO.inspect(attrs)
+
+    {:ok, attrs}
+  end
+
+  def load(_), do: :error
+
+  # Dumping to the database (ensure it's an integer)
+  def dump(int) when is_integer(int), do: {:ok, int}
+  def dump(_), do: :error
+end

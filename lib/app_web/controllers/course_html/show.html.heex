@@ -1,0 +1,22 @@
+<.header>
+  <div class="dark:text-white">Course {@course.id}</div>
+  <:subtitle>
+      <div class="dark:text-white"> This is a course record from your database.</div> <br>
+  </:subtitle>
+  <:actions>
+    <.link href={~p"/courses/#{@course}/edit"}>
+      <.button>Edit course</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Semester">
+    <span class="dark:text-white">{@course.semester}</span>
+  </:item>
+  <:item title="Name">
+    <span class="dark:text-white">{@course.name}</span>
+  </:item>
+</.list>
+
+<.back navigate={~p"/courses"}>Back to courses</.back>

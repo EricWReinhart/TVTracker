@@ -1,0 +1,12 @@
+<.simple_form :let={f} for={@changeset} action={@action} class="mb-6">
+  <%!-- <.error :if={@changeset.action}>
+    <%= gettext("Oops, something went wrong! Please check the errors below.") %>
+  </.error> --%>
+  <.input field={f[:email]} type="text" label={gettext("Email")} />
+  <.input field={f[:subject]} type="text" label={gettext("Subject")} />
+  <.input field={f[:message]} type="text" label={gettext("Message")} />
+
+  <:actions>
+    <.button type="submit"><%= gettext("Save Message") %></.button>
+  </:actions>
+</.simple_form>

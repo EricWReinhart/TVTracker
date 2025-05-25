@@ -1,0 +1,277 @@
+# defmodule AppWeb.TopicLiveTest do
+#   use AppWeb.ConnCase
+
+#   import Phoenix.LiveViewTest
+#   import App.ContentFixtures
+
+#   @create_attrs %{title: "some title", slug: "some slug"}
+#   @update_attrs %{title: "some updated title", slug: "some updated slug"}
+#   @invalid_attrs %{title: nil, slug: nil}
+
+#   defp create_topic(_) do
+#     topic = topic_fixture()
+#     %{topic: topic}
+#   end
+
+#   describe "Index" do
+#     setup [:create_topic]
+
+#     test "lists all topics", %{conn: conn, topic: topic} do
+#       {:ok, _index_live, html} = live(conn, ~p"/topics")
+
+#       assert html =~ "Listing Topics"
+#       assert html =~ topic.title
+#     end
+
+#     test "saves new topic", %{conn: conn} do
+#       {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+#       assert index_live |> element("a", "New Topic") |> render_click() =~
+#                "New Topic"
+
+#       assert_patch(index_live, ~p"/topics/new")
+
+#       assert index_live
+#              |> form("#topic-form", topic: @invalid_attrs)
+#              |> render_change() =~ "can&#39;t be blank"
+
+#       assert index_live
+#              |> form("#topic-form", topic: @create_attrs)
+#              |> render_submit()
+
+#       assert_patch(index_live, ~p"/topics")
+
+#       html = render(index_live)
+#       assert html =~ "Topic created successfully"
+#       assert html =~ "some title"
+#     end
+
+#     test "updates topic in listing", %{conn: conn, topic: topic} do
+#       {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+#       assert index_live |> element("#topics-#{topic.id} a", "Edit") |> render_click() =~
+#                "Edit Topic"
+
+#       assert_patch(index_live, ~p"/topics/#{topic}/edit")
+
+#       assert index_live
+#              |> form("#topic-form", topic: @invalid_attrs)
+#              |> render_change() =~ "can&#39;t be blank"
+
+#       assert index_live
+#              |> form("#topic-form", topic: @update_attrs)
+#              |> render_submit()
+
+#       assert_patch(index_live, ~p"/topics")
+
+#       html = render(index_live)
+#       assert html =~ "Topic updated successfully"
+#       assert html =~ "some updated title"
+#     end
+
+#     test "deletes topic in listing", %{conn: conn, topic: topic} do
+#       {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+#       assert index_live |> element("#topics-#{topic.id} a", "Delete") |> render_click()
+#       refute has_element?(index_live, "#topics-#{topic.id}")
+#     end
+#   end
+
+#   describe "Show" do
+#     setup [:create_topic]
+
+#     test "displays topic", %{conn: conn, topic: topic} do
+#       {:ok, _show_live, html} = live(conn, ~p"/topics/#{topic}")
+
+#       assert html =~ "Show Topic"
+#       assert html =~ topic.title
+#     end
+
+#     test "updates topic within modal", %{conn: conn, topic: topic} do
+#       {:ok, show_live, _html} = live(conn, ~p"/topics/#{topic}")
+
+#       assert show_live |> element("a", "Edit") |> render_click() =~
+#                "Edit Topic"
+
+#       assert_patch(show_live, ~p"/topics/#{topic}/show/edit")
+
+#       assert show_live
+#              |> form("#topic-form", topic: @invalid_attrs)
+#              |> render_change() =~ "can&#39;t be blank"
+
+#       assert show_live
+#              |> form("#topic-form", topic: @update_attrs)
+#              |> render_submit()
+
+#       assert_patch(show_live, ~p"/topics/#{topic}")
+
+#       html = render(show_live)
+#       assert html =~ "Topic updated successfully"
+#       assert html =~ "some updated title"
+#     end
+#   end
+# end
+
+defmodule AppWeb.TopicLiveTest do
+  use AppWeb.ConnCase
+
+  import Phoenix.LiveViewTest
+  import App.ContentFixtures
+
+  @create_attrs %{title: "some title", slug: "some slug"}
+  @update_attrs %{title: "some updated title", slug: "some updated slug"}
+  @invalid_attrs %{title: nil, slug: nil}
+
+  defp create_topic(_) do
+    topic = topic_fixture()
+    %{topic: topic}
+  end
+
+  describe "Index" do
+    setup [:create_topic]
+
+    test "lists all topics", %{conn: conn, topic: topic} do
+      {:ok, _index_live, html} = live(conn, ~p"/topics")
+
+      assert html =~ "Listing Topics"
+      assert html =~ topic.title
+    end
+
+    test "navigates to New Topic form", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+      assert index_live |> element("a", "New Topic") |> render_click() =~ "New Topic"
+      assert_patch(index_live, ~p"/topics/new")
+    end
+
+    test "creates new topic", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+      # Render invalid submission
+      assert index_live
+             |> form("#topic-form", topic: @invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      # Render valid submission
+      assert index_live
+             |> form("#topic-form", topic: @create_attrs)
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/topics")
+      html = render(index_live)
+      assert html =~ "Topic created successfully"
+      assert html =~ "some title"
+    end
+
+    test "updates topic in listing", %{conn: conn, topic: topic} do
+      {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+      assert index_live |> element("#topics-#{topic.id} a", "Edit") |> render_click() =~ "Edit Topic"
+      assert_patch(index_live, ~p"/topics/#{topic.slug}/edit")
+
+      # Invalid submission
+      assert index_live
+             |> form("#topic-form", topic: @invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      # Valid submission
+      assert index_live
+             |> form("#topic-form", topic: @update_attrs)
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/topics")
+      html = render(index_live)
+      assert html =~ "Topic updated successfully"
+      assert html =~ "some updated title"
+    end
+
+    test "deletes topic in listing", %{conn: conn, topic: topic} do
+      {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+      assert index_live |> element("#topics-#{topic.id} a", "Delete") |> render_click()
+      refute has_element?(index_live, "#topics-#{topic.id}")
+    end
+  end
+
+  describe "Show" do
+    setup [:create_topic]
+
+    test "displays topic", %{conn: conn, topic: topic} do
+      {:ok, _show_live, html} = live(conn, ~p"/topics/#{topic.slug}")
+
+      assert html =~ "Show Topic"
+      assert html =~ topic.title
+    end
+
+    test "edits topic within modal", %{conn: conn, topic: topic} do
+      {:ok, show_live, _html} = live(conn, ~p"/topics/#{topic.slug}")
+
+      assert show_live |> element("a", "Edit") |> render_click() =~ "Edit Topic"
+      assert_patch(show_live, ~p"/topics/#{topic.slug}/edit")
+
+      # Invalid submission
+      assert show_live
+             |> form("#topic-form", topic: @invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      # Valid submission
+      assert show_live
+             |> form("#topic-form", topic: @update_attrs)
+             |> render_submit()
+
+      assert_patch(show_live, ~p"/topics/#{topic.slug}")
+      html = render(show_live)
+      assert html =~ "Topic updated successfully"
+      assert html =~ "some updated title"
+    end
+  end
+
+  describe "Modal interactions" do
+    setup [:create_topic]
+
+    test "opens modal and navigates to edit", %{conn: conn, topic: topic} do
+      {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+      assert index_live |> element("a", "Edit") |> render_click() =~ "Edit Topic"
+      assert_patch(index_live, ~p"/topics/#{topic.slug}/edit")
+
+      assert index_live
+             |> form("#topic-form", topic: @update_attrs)
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/topics")
+    end
+
+    test "opens New Topic modal", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, ~p"/topics")
+
+      assert index_live |> element("a", "New Topic") |> render_click() =~ "New Topic"
+      assert_patch(index_live, ~p"/topics/new")
+
+      assert index_live
+             |> form("#topic-form", topic: @create_attrs)
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/topics")
+    end
+  end
+
+  describe "Form Component" do
+    setup [:create_topic]
+
+    test "validates form inputs", %{conn: conn, topic: topic} do
+      {:ok, form_live, _html} = live(conn, ~p"/topics/#{topic.slug}/edit")
+
+      # Invalid input
+      assert form_live
+             |> form("#topic-form", topic: @invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      # Valid input
+      assert form_live
+             |> form("#topic-form", topic: @update_attrs)
+             |> render_submit()
+      assert_patch(form_live, ~p"/topics/#{topic.slug}")
+    end
+  end
+end

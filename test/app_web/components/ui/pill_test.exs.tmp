@@ -1,0 +1,103 @@
+defmodule AppWeb.Components.UI.PillTest do
+  use AppWeb.ComponentCase
+
+  import AppWeb.Components.UI.Pill
+
+  test "default pill" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.pill class="custom-class">Default Pill</.pill>
+        """
+      )
+
+    assert html =~ "custom-class"
+    assert html =~ "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+    assert html =~ "Default Pill"
+    assert html =~ "</span>"
+  end
+
+  test "dark pill" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.pill color="dark" class="custom-class">Dark Pill</.pill>
+        """
+      )
+
+    assert html =~ "custom-class"
+    assert html =~ "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+    assert html =~ "Dark Pill"
+    assert html =~ "</span>"
+  end
+
+  test "red pill" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.pill color="red" class="custom-class">Red Pill</.pill>
+        """
+      )
+
+    assert html =~ "custom-class"
+    assert html =~ "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+    assert html =~ "Red Pill"
+    assert html =~ "</span>"
+  end
+
+  test "pill with custom classes" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.pill color="green" class="custom-class">Green Pill</.pill>
+        """
+      )
+
+    assert html =~ "custom-class"
+    assert html =~ "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+    assert html =~ "Green Pill"
+    assert html =~ "</span>"
+  end
+
+  test "large pill" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.pill color="indigo" large class="custom-class">Large Indigo Pill</.pill>
+        """
+      )
+
+    assert html =~ "custom-class"
+    assert html =~ "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
+    assert html =~ "Large Indigo Pill"
+    assert html =~ "</span>"
+  end
+
+  test "pill with multiple colors" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(
+        ~H"""
+        <.pill color="purple" class="custom-class">Purple Pill</.pill>
+        <.pill color="pink" class="custom-class">Pink Pill</.pill>
+        """
+      )
+
+    assert html =~ "custom-class"
+    assert html =~ "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+    assert html =~ "Purple Pill"
+    assert html =~ "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300"
+    assert html =~ "Pink Pill"
+  end
+end

@@ -1,0 +1,54 @@
+defmodule App.ContentFixtures do
+  @moduledoc """
+  This module defines test helpers for creating
+  entities via the `App.Content` context.
+  """
+
+  @doc """
+  Generate a unique topic slug.
+  """
+  def unique_topic_slug, do: "some slug#{System.unique_integer([:positive])}"
+
+  @doc """
+  Generate a topic.
+  """
+  def topic_fixture(attrs \\ %{}) do
+    {:ok, topic} =
+      attrs
+      |> Enum.into(%{
+        slug: unique_topic_slug(),
+        title: "some title"
+      })
+      |> App.Content.create_topic()
+
+    topic
+  end
+
+  @doc """
+  Generate a page.
+  """
+  def page_fixture(attrs \\ %{}) do
+    {:ok, page} =
+      attrs
+      |> Enum.into(%{
+        content: "some content"
+      })
+      |> App.Content.create_page()
+
+    page
+  end
+
+  @doc """
+  Generate a tag.
+  """
+  def tag_fixture(attrs \\ %{}) do
+    {:ok, tag} =
+      attrs
+      |> Enum.into(%{
+        name: "some name"
+      })
+      |> App.Content.create_tag()
+
+    tag
+  end
+end

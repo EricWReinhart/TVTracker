@@ -1,0 +1,13 @@
+<.header >
+    <div class="dark:text-white"> New Course </div>
+    <:subtitle>
+      <div class="dark:text-white"> Use this form to manage course records in your database.</div> <br>
+    </:subtitle>
+  </.header>
+
+<.course_form changeset={@changeset} action={~p"/courses"} />
+
+<.back navigate={~p"/courses"}>
+  <div class="dark:text-white"> Back to courses </div>
+</.back>
+

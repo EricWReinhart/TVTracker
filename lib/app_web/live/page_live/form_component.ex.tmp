@@ -1,0 +1,147 @@
+defmodule AppWeb.PageLive.FormComponent do
+  use AppWeb, :live_component
+  alias App.Content
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div class="p-4">
+      <.header>
+        {@title}
+        <:subtitle>Use this form to manage page records in your database.</:subtitle>
+      </.header>
+
+      <.simple_form
+        for={@form}
+        id="page-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+      >
+        <.input
+            field={@form[:topic_id]}
+            type="select"
+            label="Topic"
+            options={Enum.map(@topics, &{&1.title, &1.id})}
+          />
+
+        <.input
+          field={@form[:content]}
+          type="text"
+          label="Content"
+        />
+
+        <input type="hidden" name="page[page_tags_drop][]" />
+
+        <button
+          :if={@action == :edit}
+          type="button"
+          name="page[page_tags_sort][]"
+          value="new"
+          phx-click={JS.dispatch("change")}
+        >
+          Add Tag
+        </button>
+
+        <.inputs_for :let={ef} field={@form[:page_tags]}>
+          <div class="flex items-center space-x-2">
+            <button
+              type="button"
+              name="page[page_tags_drop][]"
+              value={ef.index}
+              phx-click={JS.dispatch("change")}
+              class="text-red-500"
+            >
+              <.icon name="x" class="w-6 h-6" />
+            </button>
+
+            <.input type="hidden" field={ef[:page_id]} value={@page.id} />
+            <.input type="select" field={ef[:tag_id]} options={@tag_options} />
+          </div>
+        </.inputs_for>
+
+
+
+        <:actions>
+          <.button type="submit" phx-disable-with="Saving...">Save Page</.button>
+        </:actions>
+      </.simple_form>
+
+    </div>
+    """
+  end
+
+  def mount(_params, _session, socket) do
+    topics = App.Repo.all(App.Content.Topic) |> Enum.map(&{&1.title, &1.id})
+    {:ok, assign(socket, topic_options: topics)}
+  end
+
+  @impl true
+  def update(%{page: page} = assigns, socket) do
+    topics = Content.list_topics()
+
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> assign(:tag_options, Content.list_tag_options())
+     |> assign_new(:form, fn ->
+       to_form(Content.change_page(page))
+     end)
+     |> assign(:topics, topics)}
+  end
+
+  # def update(%{page: page} = assigns, socket) do
+  #   topics = Content.list_topics()
+  #   changeset = App.Content.change_page(page)
+
+  #   {:ok,
+  #    socket
+  #    |> assign(assigns)
+  #    |> assign_new(:form, fn ->
+  #       to_form(changeset)
+  #       end)
+  #    |> assign(:topics, topics)}
+  # end
+
+  @impl true
+  def handle_event("validate", %{"page" => page_params}, socket) do
+    changeset = Content.change_page(socket.assigns.page, page_params)
+    {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+  end
+
+  def handle_event("save", %{"page" => page_params}, socket) do
+    save_page(socket, socket.assigns.action, page_params)
+  end
+
+  defp save_page(socket, :edit, page_params) do
+    case Content.update_page(socket.assigns.page, page_params) do
+      {:ok, page} ->
+        notify_parent({:saved, page})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Page updated successfully")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+
+  defp save_page(socket, :new, page_params) do
+    case Content.create_page(page_params) do
+      {:ok, page} ->
+        notify_parent({:saved, page})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Page created successfully")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+end

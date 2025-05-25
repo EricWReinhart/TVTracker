@@ -1,0 +1,37 @@
+<.header>
+  Page {@page.id}
+  <:subtitle>This is a page record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/topics/#{@topic.slug}/pages/#{@page.id || :new}/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit page</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Content">{@page.content}</:item>
+
+  <:item title="Tags">
+    <!-- Display Tags as Badges -->
+    <div class="flex flex-wrap">
+      <%= for tag <- @page.tags do %>
+        <.badge>
+          <%= tag.name %>
+        </.badge>
+      <% end %>
+    </div>
+  </:item>
+</.list>
+
+<.back navigate={~p"/topics/#{@topic.slug}/pages"}>Back to pages</.back>
+
+<.modal id="page-modal" :if={@live_action == :edit} show on_cancel={JS.patch(~p"/topics/#{@topic.slug}/pages/#{@page.id}")}>
+  <.live_component
+    module={AppWeb.PageLive.FormComponent}
+    id={@page.id || :new}
+    title={@page_title}
+    action={@live_action}
+    page={@page}
+    patch={~p"/topics/#{@topic.slug}/pages/#{@page.id || :new}"}
+  />
+</.modal>
