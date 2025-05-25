@@ -10,8 +10,8 @@ defmodule App.Repo.Migrations.CreateTags do
 
     flush()
 
-    ~w(Bucknell Sports Photography Nature)
-    |> Enum.each(&App.Content.create_tag(%{name: &1}))
+    # ~w(Bucknell Sports Photography Nature)
+    # |> Enum.each(&App.Content.create_tag(%{name: &1}))
   end
 
   def down do
