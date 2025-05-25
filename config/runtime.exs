@@ -50,15 +50,24 @@ if config_env() == :prod do
 
   config :app, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  # figure out the port Fly gives us (defaults to 8080 if not set)
+  port =
+    System.get_env("PORT", "8080")
+    |> String.to_integer()
+
+
   config :app, AppWeb.Endpoint,
-    url: [host: "eg.bucknell.edu", path: "/csci379-25s-h", port: 443, scheme: "https"],
+    server: true,
     http: [
-      # Enable IPv6 and bind on all interfaces.
-      # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
-      # See the documentation on https://hexdocs.pm/bandit/Bandit.html#t:options/0
-      # for details about using IPv6 vs IPv4 and loopback vs public addresses.
-      ip: {0, 0, 0, 0, 0, 0, 0, 0},
-      port: 4508
+      ip: {0, 0, 0, 0},    # still bind on all v4 interfaces
+      port: port
+    ],
+    # URL is only used for generating outbound links—point it at your Fly app domain
+    url: [
+      host: System.get_env("FLY_APP_NAME", "tvtracker") <> ".fly.dev",
+      scheme: "https",
+      port: 443,
+      path: "/"
     ],
     secret_key_base: secret_key_base
 
