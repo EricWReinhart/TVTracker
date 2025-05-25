@@ -8,7 +8,7 @@ import Config
 config :app, AppWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   # check_origin: ["https://eg.bucknell.edu/"]
-  check_origin: ["//tvtracker.fly.dev"]
+  check_origin: ["https://tvtracker.fly.dev/"]
 
 
 # Configures Swoosh API Client
