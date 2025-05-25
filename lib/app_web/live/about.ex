@@ -31,10 +31,11 @@ defmodule AppWeb.AboutLive do
 
           <div class="space-y-4 text-gray-700 dark:text-gray-300 flex-1">
             <p class="text-lg">
-              {gettext("I’m Eric, a Bucknell CS grad who absolutely loves watching movies and TV, especially when it comes to behind-the-scenes content and reading fan theories! When I'm not watching something, I'm usually goofing around with friends or gaming. For gaming, I gravitate towards Minecraft and Pokemon, which have been my favorites since I was a wee lad! I've sunk far more hours into them than I'd like to admit…")}
+              {gettext("I’m Eric, a Bucknell CS grad who loves movies and TV, especially behind-the-scenes content and fan theories! When I'm not watching something, I'm usually goofing around with friends, hiking, or gaming. For gaming, I gravitate towards Minecraft and Pokemon, which have been my favorites since I was a wee lad! I've sunk far more hours into them than I'd like to admit…")}
             </p>
             <p class="text-lg">
-              {gettext("Anyway, that's a little bit about me. Below you’ll find links to my course assignments, some of my favorite things, and favorite quotes. Enjoy! Remember to stay hydrated!")}
+              {gettext("This site is home to my TV Tracker, and you’ll also find a Data Story, other projects, and some of my favorite things and quotes. Enjoy exploring, and stay hydrated!")}
+
             </p>
             <p class="text-lg">
               {gettext("P.S. Never challenge me to games with a lot of luck involved; I'm really lucky :)")}
@@ -55,6 +56,10 @@ defmodule AppWeb.AboutLive do
           <.link navigate={~p"/tvtracker"} class="px-4 py-2 text-base font-medium rounded-lg bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-600 transition">
             {gettext("TVTracker")}
           </.link>
+          <.link href="https://ericwreinhart.github.io/data_visualizations/" class="px-4 py-2 text-base font-medium rounded-lg bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-600 transition">
+            {gettext("Data Story")}
+          </.link>
+
           <.link navigate={~p"/pokemon"} class="px-4 py-2 text-base font-medium rounded-lg bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-600 transition">
             {gettext("Pokemon")}
           </.link>

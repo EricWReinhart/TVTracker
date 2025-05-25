@@ -4,4 +4,4 @@ TVTracker is a simple web app where you can search, save, rate, and analyze your
 
 Video Explanation: https://drive.google.com/file/d/1wh7YdCyP6PPGFhhSR-rYN13-uR6yeumc/view?t=2
 
-Try it out: https://eg.bucknell.edu/csci379-25s-h
+Try it out: https://tvtracker.fly.dev
