@@ -7,7 +7,9 @@ import Config
 # before starting your production server.
 config :app, AppWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
-  check_origin: ["https://eg.bucknell.edu/"]
+  # check_origin: ["https://eg.bucknell.edu/"]
+  check_origin: ["//" <> System.get_env("FLY_APP_NAME") <> ".fly.dev"]
+
 
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: App.Finch
