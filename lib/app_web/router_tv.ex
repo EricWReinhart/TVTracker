@@ -93,7 +93,7 @@ defmodule AppWeb.Router do
       ] do
 
       # Other projects
-      live "/", AboutLive
+      live "/", HomeLive, :index
       live "/about", AboutLive
       live "/pokemon", FacemashLive
       live "/minesweeper", MinesweeperLive, :new
